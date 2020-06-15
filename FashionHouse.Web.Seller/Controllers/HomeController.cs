@@ -12,7 +12,6 @@ namespace FashionHouse.Web.Seller.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductModelRepository _productModelRepository;
-        //private readonly int sellerId = 1;
 
         public HomeController(ILogger<HomeController> logger, IProductModelRepository productModelRepository)
         {
@@ -22,14 +21,9 @@ namespace FashionHouse.Web.Seller.Controllers
 
         public IActionResult Index(int productId)
         {
-            ProductModel productModel = _productModelRepository.GetProductModel(productId);
+            //ProductModel productModel = _productModelRepository.GetProductModel(productId);
 
-            return View(productModel);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(/*productModel*/);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

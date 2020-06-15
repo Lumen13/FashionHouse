@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace FashionHouse.Data.EF.Repository
@@ -42,7 +43,7 @@ namespace FashionHouse.Data.EF.Repository
                 Count = product.Count,
                 Price = product.Price,
                 MarketingInfo = product.MarketingInfo,
-                ProductCategory = productCategory,
+                //ProductCategories = productCategory,
                 Seller = seller,
                 ProductAttributes = productAttributes
             };
@@ -50,11 +51,38 @@ namespace FashionHouse.Data.EF.Repository
             return productModel;
         }
 
-        public ProductModel PushProductModel(ProductModel _productModel, int sellerId)
+        public List<ProductCategory> GetProductCategory()
         {
-            Product product = new Product();
+            var productCategory = _myContext.ProductCategories.ToList();
+            return productCategory;
+        }
 
-            _myContext.SaveChanges();
+        public ProductModel PushProductModel(ProductModel _productModel, int sellerId)  // AddProduct(ProductModel productModel)
+        {
+
+            //ProductModel productModel = new ProductModel();
+            //productModel.Id = _productModel.Id;
+            //productModel.Name = _productModel.Name;
+            //productModel.Price = _productModel.Price;
+            //productModel.Count = _productModel.Count;
+            //productModel.MarketingInfo = _productModel.MarketingInfo;
+            //productModel.Seller = _productModel.Seller;
+            //productModel.SellerId = _productModel.SellerId;
+            //productModel.ProductCategory = _productModel.ProductCategory;
+            //productModel.ProductCategoryId = _productModel.ProductCategoryId;
+            //productModel.IsDeleted = false;
+
+            Product product = new Product()
+            {
+                Id = _productModel.Id,
+                Name = _productModel.Name,
+                Price = _productModel.Price,
+                Count = _productModel.Count,
+                MarketingInfo = _productModel.MarketingInfo,
+                SellerId = sellerId,
+                ProductCategoryId = _productModel.ProductCategoryId,
+                IsDeleted = false
+            };        
 
             if (_productModel.Image != null)
             {
@@ -78,15 +106,30 @@ namespace FashionHouse.Data.EF.Repository
 
                 _myContext.Products.Add(product);
                 _myContext.SaveChanges();
-            }
-            else
-            {
+            }            
 
-            }
+            _myContext.Products.Add(product);
+            _myContext.SaveChanges();
 
             var productModel = GetProductModel(product.Id);
 
             return productModel;
+        }
+
+        public ProductCategory PushProductCategory(ProductCategory _productCategory, int _sellerId) // AddCategory(ProductCategory productCategory)
+        {
+            ProductCategory productCategory = new ProductCategory()
+            {
+                Id = _productCategory.Id,
+                ParentId = _productCategory.ParentId,
+                Name = _productCategory.Name,
+                Description = _productCategory.Description
+            };
+
+            _myContext.ProductCategories.Add(productCategory);
+            _myContext.SaveChanges();
+
+            return productCategory;
         }
 
         public void DeleteProduct(int id)
@@ -98,6 +141,6 @@ namespace FashionHouse.Data.EF.Repository
             }
 
             _myContext.SaveChanges();
-        }
+        }        
     }
 }

@@ -1,0 +1,40 @@
+﻿@model FashionHouse.Data.ObjectModel.ProductModel
+
+@using (Html.BeginForm("AddProduct", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Name, new { @class = "form-text text-muted" })
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "form-text text-muted " })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Count, new { @class = "form-text text-muted" })
+        @Html.TextBoxFor(x => x.Count, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Count, "", new { @class = "form-text text-muted " })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Price, new { @class = "form-text text-muted" })
+        @Html.TextBoxFor(x => x.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Price, "", new { @class = "form-text text-muted" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.MarketingInfo, new { @class = "form-text text-muted" })
+        @Html.TextAreaFor(x => x.MarketingInfo, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.MarketingInfo, "", new { @class = "form-text text-muted" })
+    </div>
+    <hr>
+    <div class="form-group">
+        @foreach (var category in Model.ProductCategories)
+        {            
+            <input asp-for="ProductCategoryId" value="@category.Id" type="radio" />
+            <label asp-for="@category.Id">@category.Name</label>
+            <input asp-for="@category.Id" type="hidden" />
+            <br>
+        }
+        <a class="nav-link text-dark" asp-controller="Product" asp-action="AddCategory">Добавить категорию</a>
+    </div>
+    
+
+
+    <input type="submit" value="Отправить" class="btn btn-success" />
+}

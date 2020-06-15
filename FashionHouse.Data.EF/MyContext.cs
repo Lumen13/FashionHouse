@@ -44,6 +44,11 @@ namespace FashionHouse.Data.EF
                     .HasForeignKey(fk => fk.ProductCategoryId)
                     .HasPrincipalKey(pk => pk.Id)
                     .OnDelete(DeleteBehavior.Restrict);
+                builder.HasOne<ProductAttribute>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductAttributeId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
                 builder.Property(x => x.ProductCategoryId)
                     .IsRequired(false);
             });
@@ -73,6 +78,7 @@ namespace FashionHouse.Data.EF
                 builder.HasKey(x => x.Id);
                 builder.Property(x => x.Name).HasMaxLength(100);
                 builder.Property(x => x.Email).HasMaxLength(100);
+                builder.Property(x => x.Phone).HasMaxLength(50);
             });
         }
     }

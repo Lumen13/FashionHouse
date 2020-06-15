@@ -8,6 +8,7 @@ namespace FashionHouse.Data.DbModel
     {
         public int Id { get; set; }
         public int? ProductCategoryId { get; set; }
+        public int? ProductAttributeId { get; set; }
         public int SellerId { get; set; }
         public string Name { get; set; }
         public string MarketingInfo { get; set; }

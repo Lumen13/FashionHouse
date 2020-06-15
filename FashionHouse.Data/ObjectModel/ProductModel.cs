@@ -11,7 +11,7 @@ namespace FashionHouse.Data.ObjectModel
     {
         public List<ProductAttribute> ProductAttributes = new List<ProductAttribute>();
         public Seller Seller { get; set; }
-        public ProductCategory ProductCategory { get; set; }
+        public List<ProductCategory> ProductCategories { get; set; }
         public IFormFile Image { get; set; }
     }
 }
