@@ -11,6 +11,7 @@ namespace FashionHouse.Web.Seller.Controllers
         private readonly IProductModelRepository _productModelRepository;
         private readonly int _sellerId = 1;
         public List<ProductCategory> productCategoriesList;
+        public List<ProductAttribute> productAttributeList;
 
         public ProductController(IProductModelRepository productModelRepository)
         {
@@ -20,10 +21,13 @@ namespace FashionHouse.Web.Seller.Controllers
         [HttpGet, Route("Create")]
         public IActionResult AddProduct()
         {
-            productCategoriesList = _productModelRepository.GetProductCategory();
+            productCategoriesList = _productModelRepository.GetProductCategories();
+            productAttributeList = _productModelRepository.GetProductAttributes();
+
             ProductModel productModel = new ProductModel()
             {
-                ProductCategories = productCategoriesList
+                ProductCategories = productCategoriesList,
+                ProductAttributes = productAttributeList
             };
 
             return View(productModel);
@@ -47,6 +51,20 @@ namespace FashionHouse.Web.Seller.Controllers
         public IActionResult AddCategory(ProductCategory productCategory)
         {
             _productModelRepository.PushProductCategory(productCategory, _sellerId);
+
+            return new LocalRedirectResult($"~/Home/Index/");
+        }
+
+        [HttpGet, Route("AddAttribute")]
+        public IActionResult AddAttribute()
+        {
+            return View(new ProductAttribute());
+        }
+
+        [HttpPost, Route("AddAttribute")]
+        public IActionResult AddAttribute(ProductAttribute productAttribute)
+        {
+            _productModelRepository.PushProductAttribute(productAttribute, _sellerId);
 
             return new LocalRedirectResult($"~/Home/Index/");
         }

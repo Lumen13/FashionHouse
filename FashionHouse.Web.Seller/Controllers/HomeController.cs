@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using FashionHouse.Data.IRepository;
 using FashionHouse.Data.ObjectModel;
 using FashionHouse.Web.Seller.Models;
+using System.Collections.Generic;
 
 namespace FashionHouse.Web.Seller.Controllers
 {
@@ -12,6 +13,7 @@ namespace FashionHouse.Web.Seller.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductModelRepository _productModelRepository;
+        private readonly int _sellerId = 1;
 
         public HomeController(ILogger<HomeController> logger, IProductModelRepository productModelRepository)
         {
@@ -19,11 +21,11 @@ namespace FashionHouse.Web.Seller.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(int productId)
+        public IActionResult Index()
         {
-            //ProductModel productModel = _productModelRepository.GetProductModel(productId);
+            List<ProductModel> productModels = _productModelRepository.GetProductModels(_sellerId);
 
-            return View(/*productModel*/);
+            return View(productModels);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

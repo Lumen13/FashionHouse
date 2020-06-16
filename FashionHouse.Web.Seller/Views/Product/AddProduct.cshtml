@@ -23,18 +23,40 @@
         @Html.ValidationMessageFor(x => x.MarketingInfo, "", new { @class = "form-text text-muted" })
     </div>
     <hr>
-    <div class="form-group">
-        @foreach (var category in Model.ProductCategories)
-        {            
-            <input asp-for="ProductCategoryId" value="@category.Id" type="radio" />
-            <label asp-for="@category.Id">@category.Name</label>
-            <input asp-for="@category.Id" type="hidden" />
-            <br>
-        }
-        <a class="nav-link text-dark" asp-controller="Product" asp-action="AddCategory">Добавить категорию</a>
-    </div>
-    
 
+    <div class="dropdown">
+        <button class="btn btn-secondary" type="button" id="dropdownMenuCategories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Выберите категорию
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuCategories">
+            @foreach (var category in Model.ProductCategories)
+            {
+                <input class="font-weight-bold" asp-for="ProductCategoryId" value="@category.Id" type="radio" />
+                <label asp-for="@category.Id">@category.Name</label>
+                <br>
+            }
+            <div class="dropdown-divider"></div>
+            <a class="nav-link text-dark" asp-controller="Product" asp-action="AddCategory">Создать новую категорию</a>
+        </div>
+    </div>
+    <hr>
+
+    <div class="dropdown">
+        <button class="btn btn-secondary" type="button" id="dropdownMenuAttributes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Выберите аттрибут
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuAttributes">
+            @foreach (var myAttribute in Model.ProductAttributes)
+            {
+                <input class="font-weight-bold" asp-for="ProductAttributeId" value="@myAttribute.Id" type="radio" />
+                <label asp-for="@myAttribute.Id">@myAttribute.Name</label>
+                <br>
+            }
+            <div class="dropdown-divider"></div>
+            <a class="nav-link text-dark" asp-controller="Product" asp-action="AddAttribute">Создать новый аттрибут</a>
+        </div>
+    </div>
+    <hr>
 
     <input type="submit" value="Отправить" class="btn btn-success" />
 }

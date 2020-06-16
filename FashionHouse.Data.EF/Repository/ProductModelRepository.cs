@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace FashionHouse.Data.EF.Repository
 {
@@ -20,58 +18,52 @@ namespace FashionHouse.Data.EF.Repository
             _myContext = new MyContext(connectionString);
             _webRootPath = webRootPath;
         }
-
-        public ProductModel GetProductModel(int productId)
+        public List<ProductModel> GetProductModels(int sellerId)
         {
-            var product = _myContext.Products.Find(productId);
+            List<ProductModel> productModels = new List<ProductModel>();
+            var products = _myContext.Products.Where(x => x.SellerId == sellerId && x.IsDeleted == false).ToList();
+            var seller = _myContext.Sellers.Find(sellerId);
+            var categories = _myContext.ProductCategories.ToList();
+            var attributes = _myContext.ProductAttributes.ToList();
 
-            if (product == null || product.IsDeleted == true)
+            foreach (var product in products)
             {
-                return null;
+                ProductModel productModel = new ProductModel()
+                {
+                    Count = product.Count,
+                    Id = product.Id,
+                    IsDeleted = false,
+                    MarketingInfo = product.MarketingInfo,
+                    Name = product.Name,
+                    Price = product.Price,
+                    ProductCategories = categories,
+                    ProductCategoryId = product.ProductCategoryId,
+                    ProductAttributes = attributes,
+                    ProductAttributeId = product.ProductAttributeId,
+                    Seller = seller,
+                    SellerId = sellerId
+                };
+
+                productModels.Add(productModel);
             }
 
-            var seller = _myContext.Sellers.Find(product.SellerId);
-            var productAttributes = _myContext.ProductAttributes.Where(x => x.ProductId == productId).ToList();
-            var productCategory = _myContext.ProductCategories.Find(product.ProductCategoryId);
-
-            ProductModel productModel = new ProductModel()
-            {
-                Id = product.Id,
-                ProductCategoryId = productCategory.Id,
-                SellerId = seller.Id,
-                Name = product.Name,
-                Count = product.Count,
-                Price = product.Price,
-                MarketingInfo = product.MarketingInfo,
-                //ProductCategories = productCategory,
-                Seller = seller,
-                ProductAttributes = productAttributes
-            };
-
-            return productModel;
+            return productModels;
         }
 
-        public List<ProductCategory> GetProductCategory()
+        public List<ProductCategory> GetProductCategories()
         {
-            var productCategory = _myContext.ProductCategories.ToList();
-            return productCategory;
+            var productCategories = _myContext.ProductCategories.ToList();
+            return productCategories;
+        }
+
+        public List<ProductAttribute> GetProductAttributes()
+        {
+            var productAttributes = _myContext.ProductAttributes.ToList();
+            return productAttributes;
         }
 
         public ProductModel PushProductModel(ProductModel _productModel, int sellerId)  // AddProduct(ProductModel productModel)
         {
-
-            //ProductModel productModel = new ProductModel();
-            //productModel.Id = _productModel.Id;
-            //productModel.Name = _productModel.Name;
-            //productModel.Price = _productModel.Price;
-            //productModel.Count = _productModel.Count;
-            //productModel.MarketingInfo = _productModel.MarketingInfo;
-            //productModel.Seller = _productModel.Seller;
-            //productModel.SellerId = _productModel.SellerId;
-            //productModel.ProductCategory = _productModel.ProductCategory;
-            //productModel.ProductCategoryId = _productModel.ProductCategoryId;
-            //productModel.IsDeleted = false;
-
             Product product = new Product()
             {
                 Id = _productModel.Id,
@@ -81,8 +73,9 @@ namespace FashionHouse.Data.EF.Repository
                 MarketingInfo = _productModel.MarketingInfo,
                 SellerId = sellerId,
                 ProductCategoryId = _productModel.ProductCategoryId,
+                ProductAttributeId = _productModel.ProductAttributeId,
                 IsDeleted = false
-            };        
+            };
 
             if (_productModel.Image != null)
             {
@@ -106,14 +99,12 @@ namespace FashionHouse.Data.EF.Repository
 
                 _myContext.Products.Add(product);
                 _myContext.SaveChanges();
-            }            
+            }
 
             _myContext.Products.Add(product);
             _myContext.SaveChanges();
 
-            var productModel = GetProductModel(product.Id);
-
-            return productModel;
+            return null;
         }
 
         public ProductCategory PushProductCategory(ProductCategory _productCategory, int _sellerId) // AddCategory(ProductCategory productCategory)
@@ -132,6 +123,23 @@ namespace FashionHouse.Data.EF.Repository
             return productCategory;
         }
 
+        public ProductAttribute PushProductAttribute(ProductAttribute _productAttribute, int _sellerId) // AddAttribute(ProductAttribute productAttribute)
+        {
+            ProductAttribute productAttribute = new ProductAttribute()
+            {
+                Id = _productAttribute.Id,
+                Description = _productAttribute.Description,
+                ProductId = _productAttribute.ProductId,
+                Value = _productAttribute.Value,
+                Name = _productAttribute.Name
+            };
+
+            _myContext.ProductAttributes.Add(productAttribute);
+            _myContext.SaveChanges();
+
+            return productAttribute;
+        }
+
         public void DeleteProduct(int id)
         {
             var products = _myContext.Products.Where(x => x.Id == id);
@@ -141,6 +149,6 @@ namespace FashionHouse.Data.EF.Repository
             }
 
             _myContext.SaveChanges();
-        }        
+        }
     }
 }
