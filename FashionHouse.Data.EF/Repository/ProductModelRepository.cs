@@ -1,6 +1,7 @@
 ﻿using FashionHouse.Data.DbModel;
 using FashionHouse.Data.IRepository;
 using FashionHouse.Data.ObjectModel;
+using FashionHouse.Data.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,12 @@ namespace FashionHouse.Data.EF.Repository
         {
             _myContext = new MyContext(connectionString);
             _webRootPath = webRootPath;
+        }
+        public ProductModel GetProductModel(int sellerId, int productId)
+        {
+            ProductModel productModel = new ProductModel();
+
+            return productModel;
         }
         public List<ProductModel> GetProductModels(int sellerId)
         {
@@ -77,6 +84,11 @@ namespace FashionHouse.Data.EF.Repository
                 IsDeleted = false
             };
 
+            List<ProductAttribute> productAttributes = _myContext.ProductAttributes.ToList();
+            List<ProductAttributeValue> productAttributeValues = _myContext.ProductAttributeValues.Where(x => x.ProductAttributeId == productAttributes[0].Id).ToList();
+            List<ProductCategory> productCategories = _myContext.ProductCategories.Where(x => x.Id == _productModel.ProductCategoryId).ToList();
+            Seller seller = _myContext.Sellers.Where(x => x.Id == sellerId).FirstOrDefault();
+
             if (_productModel.Image != null)
             {
                 var imagePath = $"Images\\sellerId_{sellerId}\\productId_{product.Id}\\";
@@ -101,7 +113,23 @@ namespace FashionHouse.Data.EF.Repository
                 _myContext.SaveChanges();
             }
 
-            _myContext.Products.Add(product);
+            ProductModel productModel = new ProductModel()
+            {
+                Id = product.Id,
+                Count = product.Count,
+                IsDeleted = false,
+                MarketingInfo = product.MarketingInfo,
+                Name = product.Name,
+                Price = product.Price,
+                ProductAttributeId = _productModel.ProductAttributeId,
+                ProductAttributes = productAttributes,
+                ProductCategoryId = _productModel.ProductCategoryId,
+                ProductCategories = productCategories,
+                Seller = seller,
+                SellerId = sellerId
+            };
+
+            _myContext.Products.Add(productModel);
             _myContext.SaveChanges();
 
             return null;
@@ -123,21 +151,20 @@ namespace FashionHouse.Data.EF.Repository
             return productCategory;
         }
 
-        public ProductAttribute PushProductAttribute(ProductAttribute _productAttribute, int _sellerId) // AddAttribute(ProductAttribute productAttribute)
+        public void PushProductAttribute(AttributesView _attributesView, int _sellerId) // AddAttribute(ProductAttribute productAttribute)
         {
-            ProductAttribute productAttribute = new ProductAttribute()
-            {
-                Id = _productAttribute.Id,
-                Description = _productAttribute.Description,
-                ProductId = _productAttribute.ProductId,
-                Value = _productAttribute.Value,
-                Name = _productAttribute.Name
-            };
+            ProductAttribute productAttribute = _attributesView.ProductAttribute;
+            List<ProductAttributeValue> productAttributeValues = _attributesView.ProductAttributeValues;
 
             _myContext.ProductAttributes.Add(productAttribute);
             _myContext.SaveChanges();
 
-            return productAttribute;
+            foreach (var attributeValue in productAttributeValues)
+            {
+                attributeValue.ProductAttributeId = productAttribute.Id;
+                _myContext.ProductAttributeValues.Add(attributeValue);
+                _myContext.SaveChanges();
+            }           
         }
 
         public void DeleteProduct(int id)

@@ -25,7 +25,7 @@
     <hr>
 
     <div class="dropdown">
-        <button class="btn btn-secondary" type="button" id="dropdownMenuCategories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuCategories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Выберите категорию
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuCategories">
@@ -36,13 +36,13 @@
                 <br>
             }
             <div class="dropdown-divider"></div>
-            <a class="nav-link text-dark" asp-controller="Product" asp-action="AddCategory">Создать новую категорию</a>
+            <a class="nav-link text-dark dropdown-item" asp-controller="Product" asp-action="AddCategory">Создать новую категорию</a>
         </div>
     </div>
     <hr>
 
     <div class="dropdown">
-        <button class="btn btn-secondary" type="button" id="dropdownMenuAttributes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuAttributes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Выберите аттрибут
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuAttributes">

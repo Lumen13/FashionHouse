@@ -1,6 +1,7 @@
 ﻿using FashionHouse.Data.DbModel;
 using FashionHouse.Data.IRepository;
 using FashionHouse.Data.ObjectModel;
+using FashionHouse.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -26,9 +27,10 @@ namespace FashionHouse.Web.Seller.Controllers
 
             ProductModel productModel = new ProductModel()
             {
-                ProductCategories = productCategoriesList,
-                ProductAttributes = productAttributeList
+                ProductAttributes = productAttributeList,
+                ProductCategories = productCategoriesList
             };
+
 
             return View(productModel);
         }
@@ -58,15 +60,15 @@ namespace FashionHouse.Web.Seller.Controllers
         [HttpGet, Route("AddAttribute")]
         public IActionResult AddAttribute()
         {
-            return View(new ProductAttribute());
+            return View(new AttributesView());
         }
 
         [HttpPost, Route("AddAttribute")]
-        public IActionResult AddAttribute(ProductAttribute productAttribute)
+        public IActionResult AddAttribute(AttributesView attributesView)
         {
-            _productModelRepository.PushProductAttribute(productAttribute, _sellerId);
+            _productModelRepository.PushProductAttribute(attributesView, _sellerId);
 
             return new LocalRedirectResult($"~/Home/Index/");
-        }
+        }        
     }
 }

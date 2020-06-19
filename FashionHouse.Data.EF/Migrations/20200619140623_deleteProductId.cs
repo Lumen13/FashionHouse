@@ -2,22 +2,23 @@
 
 namespace FashionHouse.Data.EF.Migrations
 {
-    public partial class sixth : Migration
+    public partial class deleteProductId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.DropColumn(
                 name: "ProductId",
-                table: "Sellers",
-                nullable: false,
-                defaultValue: 0);
+                table: "ProductAttributes");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.AddColumn<int>(
                 name: "ProductId",
-                table: "Sellers");
+                table: "ProductAttributes",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
     }
 }

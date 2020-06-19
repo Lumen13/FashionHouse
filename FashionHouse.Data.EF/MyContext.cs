@@ -25,6 +25,7 @@ namespace FashionHouse.Data.EF
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
         public DbSet<Seller> Sellers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,21 +45,39 @@ namespace FashionHouse.Data.EF
                     .HasForeignKey(fk => fk.ProductCategoryId)
                     .HasPrincipalKey(pk => pk.Id)
                     .OnDelete(DeleteBehavior.Restrict);
-                builder.HasOne<ProductAttribute>()
-                    .WithMany()
-                    .HasForeignKey(fk => fk.ProductAttributeId)
-                    .HasPrincipalKey(pk => pk.Id)
-                    .OnDelete(DeleteBehavior.Restrict);
-                builder.Property(x => x.ProductCategoryId)
-                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ProductAttribute>(builder =>
             {
                 builder.HasKey(x => x.Id);
                 builder.Property(x => x.Name).HasMaxLength(1000);
-                builder.Property(x => x.Value).HasMaxLength(400);
                 builder.Property(x => x.Description).HasMaxLength(1000);
+            });
+
+            modelBuilder.Entity<ProductAttributesEntity>(builder =>
+            {
+                builder.HasKey(x => new { x.ProductAttributeEntityId, x.ProductEntityId });
+                builder.HasOne<Product>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductEntityId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
+                builder.HasOne<ProductAttribute>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductAttributeEntityId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<ProductAttributeValue>(builder =>
+            {
+                builder.HasKey(x => x.Id);
+                builder.Property(x => x.AttributeValue).HasMaxLength(100);
+                builder.HasOne<ProductAttribute>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductAttributeId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<ProductCategory>(builder =>
