@@ -46,7 +46,6 @@ namespace FashionHouse.Data.EF.Repository
                     ProductCategories = categories,
                     ProductCategoryId = product.ProductCategoryId,
                     ProductAttributes = attributes,
-                    ProductAttributeId = product.ProductAttributeId,
                     Seller = seller,
                     SellerId = sellerId
                 };
@@ -73,21 +72,40 @@ namespace FashionHouse.Data.EF.Repository
         {
             Product product = new Product()
             {
-                Id = _productModel.Id,
                 Name = _productModel.Name,
                 Price = _productModel.Price,
                 Count = _productModel.Count,
                 MarketingInfo = _productModel.MarketingInfo,
                 SellerId = sellerId,
                 ProductCategoryId = _productModel.ProductCategoryId,
-                ProductAttributeId = _productModel.ProductAttributeId,
                 IsDeleted = false
             };
 
-            List<ProductAttribute> productAttributes = _myContext.ProductAttributes.ToList();
-            List<ProductAttributeValue> productAttributeValues = _myContext.ProductAttributeValues.Where(x => x.ProductAttributeId == productAttributes[0].Id).ToList();
-            List<ProductCategory> productCategories = _myContext.ProductCategories.Where(x => x.Id == _productModel.ProductCategoryId).ToList();
-            Seller seller = _myContext.Sellers.Where(x => x.Id == sellerId).FirstOrDefault();
+            _myContext.Products.Add(product);
+            _myContext.SaveChanges();
+
+            List<ProductAttribute> productAttributes = _productModel.ProductAttributes;
+            List<ProductAttribute> productAttributesFiltered = new List<ProductAttribute>();
+
+            int attributeIdCounter = 0;
+            for (int i = 0; i < productAttributes.Count; i++)
+            {
+                if (productAttributes[i].IsChecked == true)
+                {                    
+                    var dbAttribute = _myContext.ProductAttributes.Where(x => x.Id == i+1).FirstOrDefault();
+                    productAttributesFiltered.Add(dbAttribute);
+
+                    var attributeEntity = new ProductAttributesEntity()
+                    {
+                        ProductEntityId = product.Id,
+                        ProductAttributeEntityId = productAttributesFiltered[attributeIdCounter].Id
+                    };
+                    attributeIdCounter++;
+
+                    _myContext.ProductAttributesEntities.Add(attributeEntity);
+                    _myContext.SaveChanges();
+                }
+            }            
 
             if (_productModel.Image != null)
             {
@@ -111,26 +129,7 @@ namespace FashionHouse.Data.EF.Repository
 
                 _myContext.Products.Add(product);
                 _myContext.SaveChanges();
-            }
-
-            ProductModel productModel = new ProductModel()
-            {
-                Id = product.Id,
-                Count = product.Count,
-                IsDeleted = false,
-                MarketingInfo = product.MarketingInfo,
-                Name = product.Name,
-                Price = product.Price,
-                ProductAttributeId = _productModel.ProductAttributeId,
-                ProductAttributes = productAttributes,
-                ProductCategoryId = _productModel.ProductCategoryId,
-                ProductCategories = productCategories,
-                Seller = seller,
-                SellerId = sellerId
-            };
-
-            _myContext.Products.Add(productModel);
-            _myContext.SaveChanges();
+            }          
 
             return null;
         }

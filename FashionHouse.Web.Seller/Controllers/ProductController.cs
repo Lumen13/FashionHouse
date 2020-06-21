@@ -31,7 +31,6 @@ namespace FashionHouse.Web.Seller.Controllers
                 ProductCategories = productCategoriesList
             };
 
-
             return View(productModel);
         }
 

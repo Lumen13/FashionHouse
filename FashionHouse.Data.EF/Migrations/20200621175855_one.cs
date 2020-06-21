@@ -12,9 +12,9 @@ namespace FashionHouse.Data.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 1000, nullable: true),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true)
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    IsChecked = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +64,7 @@ namespace FashionHouse.Data.EF.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductAttributeId = table.Column<int>(nullable: false),
-                    Relevance = table.Column<string>(maxLength: 100, nullable: true)
+                    AttributeValue = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,8 +83,7 @@ namespace FashionHouse.Data.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCategoryId = table.Column<int>(nullable: true),
-                    ProductAttributeId = table.Column<int>(nullable: true),
+                    ProductCategoryId = table.Column<int>(nullable: false),
                     SellerId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 250, nullable: true),
                     MarketingInfo = table.Column<string>(maxLength: 1000, nullable: true),
@@ -110,24 +109,25 @@ namespace FashionHouse.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductAttributesEntity",
+                name: "ProductAttributesEntities",
                 columns: table => new
                 {
-                    ProductEntityId = table.Column<int>(nullable: false),
-                    ProductAttributeEntityId = table.Column<int>(nullable: false),
                     Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductEntityId = table.Column<int>(nullable: false),
+                    ProductAttributeEntityId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductAttributesEntity", x => new { x.ProductAttributeEntityId, x.ProductEntityId });
+                    table.PrimaryKey("PK_ProductAttributesEntities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductAttributesEntity_ProductAttributes_ProductAttributeEntityId",
+                        name: "FK_ProductAttributesEntities_ProductAttributes_ProductAttributeEntityId",
                         column: x => x.ProductAttributeEntityId,
                         principalTable: "ProductAttributes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductAttributesEntity_Products_ProductEntityId",
+                        name: "FK_ProductAttributesEntities_Products_ProductEntityId",
                         column: x => x.ProductEntityId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -135,8 +135,13 @@ namespace FashionHouse.Data.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductAttributesEntity_ProductEntityId",
-                table: "ProductAttributesEntity",
+                name: "IX_ProductAttributesEntities_ProductAttributeEntityId",
+                table: "ProductAttributesEntities",
+                column: "ProductAttributeEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributesEntities_ProductEntityId",
+                table: "ProductAttributesEntities",
                 column: "ProductEntityId");
 
             migrationBuilder.CreateIndex(
@@ -163,7 +168,7 @@ namespace FashionHouse.Data.EF.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProductAttributesEntity");
+                name: "ProductAttributesEntities");
 
             migrationBuilder.DropTable(
                 name: "ProductAttributeValues");

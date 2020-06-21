@@ -43,9 +43,6 @@ namespace FashionHouse.Data.EF.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
@@ -71,6 +68,9 @@ namespace FashionHouse.Data.EF.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
+
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(1000)")
@@ -104,17 +104,24 @@ namespace FashionHouse.Data.EF.Migrations
 
             modelBuilder.Entity("FashionHouse.Data.DbModel.ProductAttributesEntity", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int>("ProductAttributeEntityId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductEntityId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductAttributeEntityId", "ProductEntityId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductAttributeEntityId");
 
                     b.HasIndex("ProductEntityId");
 
-                    b.ToTable("ProductAttributesEntity");
+                    b.ToTable("ProductAttributesEntities");
                 });
 
             modelBuilder.Entity("FashionHouse.Data.DbModel.ProductCategory", b =>

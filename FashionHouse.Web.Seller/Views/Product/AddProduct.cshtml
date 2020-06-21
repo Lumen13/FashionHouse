@@ -46,10 +46,10 @@
             Выберите аттрибут
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuAttributes">
-            @foreach (var myAttribute in Model.ProductAttributes)
+            @for (int i = 0; i < Model.ProductAttributes.Count; i++)            
             {
-                <input class="font-weight-bold" asp-for="ProductAttributeId" value="@myAttribute.Id" type="radio" />
-                <label asp-for="@myAttribute.Id">@myAttribute.Name</label>
+                <input class="font-weight-bold" asp-for="ProductAttributes[i].IsChecked" type="checkbox" />
+                <label asp-for="@Model.ProductAttributes[i].IsChecked">@Model.ProductAttributes[i].Name</label>
                 <br>
             }
             <div class="dropdown-divider"></div>

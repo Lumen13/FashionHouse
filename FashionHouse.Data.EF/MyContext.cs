@@ -26,6 +26,7 @@ namespace FashionHouse.Data.EF
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
+        public DbSet<ProductAttributesEntity> ProductAttributesEntities { get; set; }
         public DbSet<Seller> Sellers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +57,7 @@ namespace FashionHouse.Data.EF
 
             modelBuilder.Entity<ProductAttributesEntity>(builder =>
             {
-                builder.HasKey(x => new { x.ProductAttributeEntityId, x.ProductEntityId });
+                builder.HasKey(x => x.Id);
                 builder.HasOne<Product>()
                     .WithMany()
                     .HasForeignKey(fk => fk.ProductEntityId)
