@@ -84,6 +84,33 @@ namespace FashionHouse.Data.EF.Repository
             _myContext.Products.Add(product);
             _myContext.SaveChanges();
 
+            if (_productModel.Images != null)
+            {
+                foreach (var image in _productModel.Images)
+                {
+                    var fullPath = $"{_webRootPath}\\wwwroot\\Images\\sellerId_{sellerId}\\productId_{product.Id}\\";
+                    var imageName = Guid.NewGuid() + "." + image.ContentType.Split("/").Last();
+
+                    var ImageURL = fullPath + imageName;
+                    ProductImage dbImage = new ProductImage()
+                    {
+                        ImagePath = ImageURL,
+                        ProductId = product.Id
+                    };
+
+                    if (Directory.Exists(fullPath) == false)
+                    {
+                        Directory.CreateDirectory(fullPath);
+                    }
+
+                    using var fileStream = new FileStream(fullPath + imageName, FileMode.Create);
+                    image.CopyTo(fileStream);
+
+                    _myContext.ProductImages.Add(dbImage);
+
+                }
+            }
+
             List<ProductAttribute> productAttributes = _productModel.ProductAttributes;
             List<ProductAttribute> productAttributesFiltered = new List<ProductAttribute>();
 
@@ -106,30 +133,6 @@ namespace FashionHouse.Data.EF.Repository
                     _myContext.SaveChanges();
                 }
             }            
-
-            if (_productModel.Image != null)
-            {
-                var imagePath = $"Images\\sellerId_{sellerId}\\productId_{product.Id}\\";
-
-                var fullPath = $"{_webRootPath}\\wwwroot\\{imagePath}";
-
-                var imageName = Guid.NewGuid() + "." + _productModel.Image.ContentType.Split("/").Last();
-
-                var ImageURL = imagePath + imageName;
-
-                if (Directory.Exists(fullPath) == false)
-                {
-                    Directory.CreateDirectory(fullPath);
-                }
-
-                using (var fileStream = new FileStream(fullPath + imageName, FileMode.Create))
-                {
-                    _productModel.Image.CopyTo(fileStream);
-                }
-
-                _myContext.Products.Add(product);
-                _myContext.SaveChanges();
-            }          
 
             return null;
         }

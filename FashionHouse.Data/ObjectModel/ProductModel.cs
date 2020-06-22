@@ -9,6 +9,6 @@ namespace FashionHouse.Data.ObjectModel
         public List<ProductAttribute> ProductAttributes { get; set; }
         public Seller Seller { get; set; }
         public List<ProductCategory> ProductCategories { get; set; }
-        public IFormFile Image { get; set; }
+        public List<IFormFile> Images { get; set; }
     }
 }

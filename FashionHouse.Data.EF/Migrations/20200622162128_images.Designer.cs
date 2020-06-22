@@ -4,14 +4,16 @@ using FashionHouse.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FashionHouse.Data.EF.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20200622162128_images")]
+    partial class images
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,15 +151,15 @@ namespace FashionHouse.Data.EF.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImage", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImages", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ImagePath")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -240,7 +242,7 @@ namespace FashionHouse.Data.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImage", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImages", b =>
                 {
                     b.HasOne("FashionHouse.Data.DbModel.Product", null)
                         .WithMany()

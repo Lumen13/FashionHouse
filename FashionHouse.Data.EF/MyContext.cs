@@ -24,6 +24,7 @@ namespace FashionHouse.Data.EF
 
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
         public DbSet<ProductAttributesEntity> ProductAttributesEntities { get; set; }
@@ -66,6 +67,16 @@ namespace FashionHouse.Data.EF
                 builder.HasOne<ProductAttribute>()
                     .WithMany()
                     .HasForeignKey(fk => fk.ProductAttributeEntityId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<ProductImage>(builder =>
+            {
+                builder.HasKey(x => x.Id);
+                builder.HasOne<Product>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductId)
                     .HasPrincipalKey(pk => pk.Id)
                     .OnDelete(DeleteBehavior.Restrict);
             });
