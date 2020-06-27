@@ -19,19 +19,20 @@ namespace FashionHouse.Data.EF.Repository
             _myContext = new MyContext(connectionString);
             _webRootPath = webRootPath;
         }
-        public ProductModel GetProductModel(int sellerId, int productId)
+        public Product GetProduct(int sellerId, int productId)
         {
-            ProductModel productModel = new ProductModel();
+            Product product = _myContext.Products.Where(x => x.Id == productId).FirstOrDefault();
 
-            return productModel;
+            return product;
         }
-        public List<ProductModel> GetProductModels(int sellerId)
+        public ProductsView GetProductModels(int sellerId)
         {
             List<ProductModel> productModels = new List<ProductModel>();
             var products = _myContext.Products.Where(x => x.SellerId == sellerId && x.IsDeleted == false).ToList();
             var seller = _myContext.Sellers.Find(sellerId);
             var categories = _myContext.ProductCategories.ToList();
             var attributes = _myContext.ProductAttributes.ToList();
+            var images = _myContext.ProductImages.ToList();
 
             foreach (var product in products)
             {
@@ -53,7 +54,13 @@ namespace FashionHouse.Data.EF.Repository
                 productModels.Add(productModel);
             }
 
-            return productModels;
+            ProductsView productsView = new ProductsView()
+            {
+                ProductModels = productModels,
+                Images = images
+            };
+
+            return productsView;
         }
 
         public List<ProductCategory> GetProductCategories()
@@ -68,7 +75,13 @@ namespace FashionHouse.Data.EF.Repository
             return productAttributes;
         }
 
-        public ProductModel PushProductModel(ProductModel _productModel, int sellerId)  // AddProduct(ProductModel productModel)
+        public List<ProductAttributeValue> GetProductAttributeValues()
+        {
+            var productAttributeValues = _myContext.ProductAttributeValues.ToList();
+            return productAttributeValues;
+        }
+
+        public Product PushProductModel(ProductModel _productModel, int sellerId)  // AddProduct(ProductModel productModel)
         {
             Product product = new Product()
             {
@@ -118,8 +131,8 @@ namespace FashionHouse.Data.EF.Repository
             for (int i = 0; i < productAttributes.Count; i++)
             {
                 if (productAttributes[i].IsChecked == true)
-                {                    
-                    var dbAttribute = _myContext.ProductAttributes.Where(x => x.Id == i+1).FirstOrDefault();
+                {
+                    var dbAttribute = _myContext.ProductAttributes.Where(x => x.Id == i + 1).FirstOrDefault();   // 1 - is not const!
                     productAttributesFiltered.Add(dbAttribute);
 
                     var attributeEntity = new ProductAttributesEntity()
@@ -132,18 +145,28 @@ namespace FashionHouse.Data.EF.Repository
                     _myContext.ProductAttributesEntities.Add(attributeEntity);
                     _myContext.SaveChanges();
                 }
-            }            
+            }
 
-            return null;
+            return product;
         }
 
         public ProductCategory PushProductCategory(ProductCategory _productCategory, int _sellerId) // AddCategory(ProductCategory productCategory)
         {
+            ProductCategory parentCategory = new ProductCategory();
+
+            if (_productCategory.ParentId != null)
+            {
+                parentCategory = _myContext.ProductCategories.Where(x => x.Id == _productCategory.ParentId).FirstOrDefault();
+                parentCategory.IsParent = true;
+            }
+
             ProductCategory productCategory = new ProductCategory()
             {
                 Id = _productCategory.Id,
                 ParentId = _productCategory.ParentId,
+                IsParent = _productCategory.IsParent,
                 Name = _productCategory.Name,
+                ParentName = parentCategory.Name,
                 Description = _productCategory.Description
             };
 
@@ -166,7 +189,7 @@ namespace FashionHouse.Data.EF.Repository
                 attributeValue.ProductAttributeId = productAttribute.Id;
                 _myContext.ProductAttributeValues.Add(attributeValue);
                 _myContext.SaveChanges();
-            }           
+            }
         }
 
         public void DeleteProduct(int id)
@@ -178,6 +201,47 @@ namespace FashionHouse.Data.EF.Repository
             }
 
             _myContext.SaveChanges();
+        }
+
+        public void AssignValues(int id, AttributeValuesView attributeValuesView)
+        {
+            ProductAttributeValuesProducts productAttributeValuesProducts = new ProductAttributeValuesProducts();
+
+            for (int i = 0; i < attributeValuesView.ProductAttributeValues.Count; i++)
+            {
+                if (attributeValuesView.ProductAttributeValues[i].AttributeValue != null &&
+                    attributeValuesView.ProductAttributeValues[i].AttributeValue != "0")
+                {
+                    switch (i)
+                    {
+                        case 16:                                                                                // not const
+                            attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 3;               // not const
+                            break;
+                        case 17:
+                            attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 4;
+                            break;
+                        case 18:
+                            attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 5;
+                            break;
+                        default:                            
+                            if (Convert.ToInt32(attributeValuesView.ProductAttributeValues[i].AttributeValue) < 9)
+                                attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 1;           // size part 1
+                            else
+                                attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 2;           // size part 2
+                            break;
+                    }
+
+                    var dbValue = _myContext.ProductAttributeValues.Where(x => x.Id == i+1).FirstOrDefault();
+
+                    productAttributeValuesProducts.Id = 0;
+                    productAttributeValuesProducts.ProductId = id;
+                    productAttributeValuesProducts.ProductAttributeId = attributeValuesView.ProductAttributeValues[i].ProductAttributeId;
+                    productAttributeValuesProducts.ProductAttributeValueId = dbValue.Id;
+
+                    _myContext.ProductAttributeValuesProducts.Add(productAttributeValuesProducts);
+                    _myContext.SaveChanges();
+                }
+            }
         }
     }
 }

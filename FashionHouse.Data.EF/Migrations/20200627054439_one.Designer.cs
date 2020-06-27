@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FashionHouse.Data.EF.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20200622162128_images")]
-    partial class images
+    [Migration("20200627054439_one")]
+    partial class one
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,6 +104,28 @@ namespace FashionHouse.Data.EF.Migrations
                     b.ToTable("ProductAttributeValues");
                 });
 
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductAttributeValuesProducts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductAttributeValueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductAttributeValueId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductAttributeValuesProducts");
+                });
+
             modelBuilder.Entity("FashionHouse.Data.DbModel.ProductAttributesEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -137,12 +159,18 @@ namespace FashionHouse.Data.EF.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
+                    b.Property<bool>("IsParent")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ParentName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -151,15 +179,15 @@ namespace FashionHouse.Data.EF.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImages", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ImagePath")
-                        .HasColumnType("int");
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -219,6 +247,21 @@ namespace FashionHouse.Data.EF.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductAttributeValuesProducts", b =>
+                {
+                    b.HasOne("FashionHouse.Data.DbModel.ProductAttributeValue", null)
+                        .WithMany()
+                        .HasForeignKey("ProductAttributeValueId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FashionHouse.Data.DbModel.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FashionHouse.Data.DbModel.ProductAttributesEntity", b =>
                 {
                     b.HasOne("FashionHouse.Data.DbModel.ProductAttribute", null)
@@ -242,7 +285,7 @@ namespace FashionHouse.Data.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImages", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.ProductImage", b =>
                 {
                     b.HasOne("FashionHouse.Data.DbModel.Product", null)
                         .WithMany()

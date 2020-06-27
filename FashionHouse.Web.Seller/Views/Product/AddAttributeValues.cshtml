@@ -1,0 +1,97 @@
+﻿@model FashionHouse.Data.ViewModel.AttributeValuesView
+
+<h4>Всего единиц товара: @Model.Product.Count</h4>
+
+@using (Html.BeginForm("AddAttributeValues", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @for (int i = 0; i < Model.ProductAttributes.Count; i++)
+    {
+        @if (i == 0)
+        {
+            <table class="table my-paddingZero">
+                <thead class="thead-light my-paddingZero">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Размер</th>
+                        <th scope="col">Количество</th>
+                    </tr>
+                </thead>
+                @for (int j = 0; j < Model.ProductAttributeValues.Count; j++)
+                {
+                    if (Model.ProductAttributeValues[j].ProductAttributeId == 1 ||          // not const
+                        Model.ProductAttributeValues[j].ProductAttributeId == 2)            // not const
+                    {
+                        <tbody class="my-paddingZero">
+                            <tr class="my-paddingZero">
+                                <th class="my-paddingZero" scope="row">@j</th>
+                                <td class="my-paddingZero">@Model.ProductAttributeValues[j].AttributeValue</td>
+                                <td class="my-paddingZero">
+                                    <input type="number"
+                                           value="0"
+                                           id="numValueInput[@j]"
+                                           name="attributeValuesView.ProductAttributeValues[@j].AttributeValue"
+                                           max="@Model.Product.Count"
+                                           min="0"
+                                           onclick="numValueInputCounter()">
+                                    шт.
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                }
+            </table>
+        }
+
+        else if (i == 1)
+        {
+            continue;
+        }
+
+        else
+        {
+            <table class="table my-paddingZero">
+                <thead class="thead-light my-paddingZero">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">@Model.ProductAttributes[i].Name</th>
+                        <th scope="col">Количество</th>
+                    </tr>
+                </thead>
+                @for (int j = 0; j < Model.ProductAttributeValues.Count; j++)
+                {
+                    if (Model.ProductAttributeValues[j].ProductAttributeId == Model.ProductAttributes[i].Id)
+                    {
+                        <tbody class="my-paddingZero">
+                            <tr class="my-paddingZero">
+                                <th class="my-paddingZero" scope="row">@j</th>
+                                <td class="my-paddingZero">@Model.ProductAttributeValues[j].AttributeValue</td>
+                                <td class="my-paddingZero">
+                                    @switch (i)
+                                    {
+                                        case 2:
+                                            <input type="radio"
+                                                   value="@Model.ProductAttributeValues[j].AttributeValue"
+                                                   name="attributeValuesView.ProductAttributeValues[16].AttributeValue">
+                                            break;
+                                        case 3:
+                                            <input type="radio"
+                                                   value="@Model.ProductAttributeValues[j].AttributeValue"
+                                                   name="attributeValuesView.ProductAttributeValues[17].AttributeValue">
+                                            break;
+                                        case 4:
+                                            <input type="radio"
+                                                   value="@Model.ProductAttributeValues[j].AttributeValue"
+                                                   name="attributeValuesView.ProductAttributeValues[18].AttributeValue">
+                                            break;
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                }
+            </table>
+        }
+    }
+    <hr />
+    <input type="submit" value="Отправить" class="btn btn-success" />
+}

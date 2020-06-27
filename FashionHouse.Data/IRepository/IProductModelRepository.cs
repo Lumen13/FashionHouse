@@ -7,11 +7,11 @@ namespace FashionHouse.Data.IRepository
 {
     public interface IProductModelRepository
     {
-        ProductModel GetProductModel(int sellerId, int productId);
+        Product GetProduct(int sellerId, int productId);
 
-        List<ProductModel> GetProductModels(int sellerId);
+        ProductsView GetProductModels(int sellerId);
 
-        ProductModel PushProductModel(ProductModel productModel, int sellerId);
+        Product PushProductModel(ProductModel productModel, int sellerId);
 
         ProductCategory PushProductCategory(ProductCategory productCategory, int sellerId);
 
@@ -20,6 +20,10 @@ namespace FashionHouse.Data.IRepository
         List<ProductCategory> GetProductCategories();
 
         List<ProductAttribute> GetProductAttributes();
+
+        List<ProductAttributeValue> GetProductAttributeValues();
+
+        void AssignValues(int id, AttributeValuesView attributeValuesView);
 
         void DeleteProduct(int id);        
     }

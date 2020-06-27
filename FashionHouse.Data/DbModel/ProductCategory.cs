@@ -8,6 +8,8 @@ namespace FashionHouse.Data.DbModel
     {
         public int Id { get; set; }
         public int? ParentId { get; set; }
+        public string ParentName { get; set; }
+        public bool IsParent { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

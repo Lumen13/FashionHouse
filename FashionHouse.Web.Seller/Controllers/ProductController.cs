@@ -37,15 +37,17 @@ namespace FashionHouse.Web.Seller.Controllers
         [HttpPost, Route("Create")]
         public IActionResult AddProduct(ProductModel productModel)
         {
-            _productModelRepository.PushProductModel(productModel, _sellerId);
+            var productAfterPush = _productModelRepository.PushProductModel(productModel, _sellerId);
 
-            return new LocalRedirectResult($"~/Home/Index/");
+            return Redirect($"AddAttributeValues/{productAfterPush.Id}");
         }
 
         [HttpGet, Route("AddCategory")]
         public IActionResult AddCategory()
         {
-            return View(new ProductCategory());
+            var categories = _productModelRepository.GetProductCategories();
+
+            return View(categories);
         }
 
         [HttpPost, Route("AddCategory")]
@@ -53,7 +55,7 @@ namespace FashionHouse.Web.Seller.Controllers
         {
             _productModelRepository.PushProductCategory(productCategory, _sellerId);
 
-            return new LocalRedirectResult($"~/Home/Index/");
+            return new LocalRedirectResult($"~/Create/");
         }
 
         [HttpGet, Route("AddAttribute")]
@@ -68,6 +70,39 @@ namespace FashionHouse.Web.Seller.Controllers
             _productModelRepository.PushProductAttribute(attributesView, _sellerId);
 
             return new LocalRedirectResult($"~/Home/Index/");
-        }        
+        }
+
+        [Route("Products")]
+        public IActionResult Products()
+        {
+            ProductsView productsView = _productModelRepository.GetProductModels(_sellerId);
+
+            return View(productsView);
+        }
+
+        [HttpGet, Route("AddAttributeValues/{id}")]
+        public IActionResult AddAttributeValues(int id)
+        {
+            var pAttributes = _productModelRepository.GetProductAttributes();
+            var pAttributeValues = _productModelRepository.GetProductAttributeValues();
+            var product = _productModelRepository.GetProduct(_sellerId, id);
+
+            AttributeValuesView attributeValuesView = new AttributeValuesView()
+            {
+                ProductAttributes = pAttributes,
+                ProductAttributeValues = pAttributeValues,
+                Product = product
+            };
+
+            return View(attributeValuesView);
+        }
+
+        [HttpPost, Route("AddAttributeValues/{id}")]
+        public IActionResult AddAttributeValues(AttributeValuesView attributeValuesView, int id)
+        {
+            _productModelRepository.AssignValues(id, attributeValuesView);
+
+            return new LocalRedirectResult($"~/Home/Index/");
+        }
     }
 }

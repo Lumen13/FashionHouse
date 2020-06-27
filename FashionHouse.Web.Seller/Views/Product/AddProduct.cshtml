@@ -31,24 +31,38 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuCategories">
             @foreach (var category in Model.ProductCategories)
             {
-                <input class="font-weight-bold" asp-for="ProductCategoryId" value="@category.Id" type="radio" />
-                <label asp-for="@category.Id">@category.Name</label>
-                <br>
+                @if (category.ParentId != null && category.IsParent == false)
+                {
+                    <div class="dropdown" id="dropdownDivCategories">
+                        <a class="btn btn-light my-paddingZero" id="@category.ParentName" name="@category.ParentName">@category.ParentName</a>
+                        <br />
+                        <div class="myMarginInFilter">
+                            <input class="font-weight-bold" asp-for="ProductCategoryId" value="@category.Id" type="radio" />
+                            <label class="my-paddingZero" asp-for="@category.Id">@category.Name</label>
+                        </div>
+                    </div>
+                    continue;
+                }
+                @if (category.IsParent == false)
+                {
+                    <input class="font-weight-bold" asp-for="ProductCategoryId" value="@category.Id" type="radio" />
+                    <label class="my-paddingZero" asp-for="@category.Id">@category.Name</label>
+                    <br>
+                }
             }
             <div class="dropdown-divider"></div>
             <a class="nav-link text-dark dropdown-item" asp-controller="Product" asp-action="AddCategory">Создать новую категорию</a>
         </div>
     </div>
     <hr>
-
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuAttributes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Выберите аттрибут
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuAttributes">
-            @for (int i = 0; i < Model.ProductAttributes.Count; i++)            
+            @for (int i = 0; i < Model.ProductAttributes.Count; i++)
             {
-                <input class="font-weight-bold" asp-for="ProductAttributes[i].IsChecked" type="checkbox" />
+                <input class="font-weight-bold" asp-for="ProductAttributes[i].IsChecked" type="checkbox" checked/>
                 <label asp-for="@Model.ProductAttributes[i].IsChecked">@Model.ProductAttributes[i].Name</label>
                 <br>
             }

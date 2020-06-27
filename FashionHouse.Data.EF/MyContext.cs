@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace FashionHouse.Data.EF
@@ -29,6 +30,7 @@ namespace FashionHouse.Data.EF
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
         public DbSet<ProductAttributesEntity> ProductAttributesEntities { get; set; }
         public DbSet<Seller> Sellers { get; set; }
+        public DbSet<ProductAttributeValuesProducts> ProductAttributeValuesProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +56,26 @@ namespace FashionHouse.Data.EF
                 builder.HasKey(x => x.Id);
                 builder.Property(x => x.Name).HasMaxLength(1000);
                 builder.Property(x => x.Description).HasMaxLength(1000);
+            });
+
+            modelBuilder.Entity<ProductAttributeValuesProducts>(builder =>
+            {
+                builder.HasKey(x => x.Id);
+                builder.HasOne<Product>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
+                builder.HasOne<ProductAttribute>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductAttributeId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
+                builder.HasOne<ProductAttributeValue>()
+                    .WithMany()
+                    .HasForeignKey(fk => fk.ProductAttributeValueId)
+                    .HasPrincipalKey(pk => pk.Id)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<ProductAttributesEntity>(builder =>
