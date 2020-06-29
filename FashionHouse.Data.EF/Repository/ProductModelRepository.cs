@@ -52,11 +52,16 @@ namespace FashionHouse.Data.EF.Repository
                 };
 
                 productModels.Add(productModel);
-            }
+            }            
+
+            var attributesValuesEntities = _myContext.AttributesValuesProductEntities.ToList();
+            var attributesValues = _myContext.ProductAttributeValues.ToList();
 
             ProductsView productsView = new ProductsView()
             {
                 ProductModels = productModels,
+                AttributesValuesEntities = attributesValuesEntities,
+                ProductAttributeValues = attributesValues,
                 Images = images
             };
 
@@ -97,12 +102,12 @@ namespace FashionHouse.Data.EF.Repository
             _myContext.Products.Add(product);
             _myContext.SaveChanges();
 
-            if (_productModel.Images != null)
+            if (_productModel.Images != null)                                                                   // saving image
             {
-                foreach (var image in _productModel.Images)
+                for (int i = 0; i < _productModel.Images.Count; i++)
                 {
                     var fullPath = $"{_webRootPath}\\wwwroot\\Images\\sellerId_{sellerId}\\productId_{product.Id}\\";
-                    var imageName = Guid.NewGuid() + "." + image.ContentType.Split("/").Last();
+                    var imageName = i + "." + _productModel.Images[i].ContentType.Split("/").Last();
 
                     var ImageURL = fullPath + imageName;
                     ProductImage dbImage = new ProductImage()
@@ -117,10 +122,9 @@ namespace FashionHouse.Data.EF.Repository
                     }
 
                     using var fileStream = new FileStream(fullPath + imageName, FileMode.Create);
-                    image.CopyTo(fileStream);
+                    _productModel.Images[i].CopyTo(fileStream);
 
                     _myContext.ProductImages.Add(dbImage);
-
                 }
             }
 
@@ -205,7 +209,8 @@ namespace FashionHouse.Data.EF.Repository
 
         public void AssignValues(int id, AttributeValuesView attributeValuesView)
         {
-            ProductAttributeValuesProducts productAttributeValuesProducts = new ProductAttributeValuesProducts();
+            AttributesValuesProductEntity productAttributeValuesProducts = new AttributesValuesProductEntity();
+            ProductAttributeValue dbValue;
 
             for (int i = 0; i < attributeValuesView.ProductAttributeValues.Count; i++)
             {
@@ -216,29 +221,38 @@ namespace FashionHouse.Data.EF.Repository
                     {
                         case 16:                                                                                // not const
                             attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 3;               // not const
+                            productAttributeValuesProducts.Pieces = 1;
+                            dbValue = _myContext.ProductAttributeValues.Where(x =>
+                                x.AttributeValue == attributeValuesView.ProductAttributeValues[i].AttributeValue).FirstOrDefault();
                             break;
                         case 17:
                             attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 4;
+                            productAttributeValuesProducts.Pieces = 1;
+                            dbValue = _myContext.ProductAttributeValues.Where(x =>
+                                x.AttributeValue == attributeValuesView.ProductAttributeValues[i].AttributeValue).FirstOrDefault();
                             break;
                         case 18:
                             attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 5;
+                            productAttributeValuesProducts.Pieces = 1;
+                            dbValue = _myContext.ProductAttributeValues.Where(x =>
+                                x.AttributeValue == attributeValuesView.ProductAttributeValues[i].AttributeValue).FirstOrDefault();
                             break;
-                        default:                            
-                            if (Convert.ToInt32(attributeValuesView.ProductAttributeValues[i].AttributeValue) < 9)
-                                attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 1;           // size part 1
+                        default:
+                            dbValue = _myContext.ProductAttributeValues.Where(x => x.Id == i + 1).FirstOrDefault();
+                            productAttributeValuesProducts.Pieces = Convert.ToInt32(attributeValuesView.ProductAttributeValues[i].AttributeValue);
+                            if (i < 9)                                                                          
+                                attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 1;           // size part 1                                                                                                                
                             else
                                 attributeValuesView.ProductAttributeValues[i].ProductAttributeId = 2;           // size part 2
                             break;
-                    }
-
-                    var dbValue = _myContext.ProductAttributeValues.Where(x => x.Id == i+1).FirstOrDefault();
+                    }                    
 
                     productAttributeValuesProducts.Id = 0;
                     productAttributeValuesProducts.ProductId = id;
                     productAttributeValuesProducts.ProductAttributeId = attributeValuesView.ProductAttributeValues[i].ProductAttributeId;
-                    productAttributeValuesProducts.ProductAttributeValueId = dbValue.Id;
+                    productAttributeValuesProducts.ProductAttributeValueId = dbValue.Id;                    
 
-                    _myContext.ProductAttributeValuesProducts.Add(productAttributeValuesProducts);
+                    _myContext.AttributesValuesProductEntities.Add(productAttributeValuesProducts);
                     _myContext.SaveChanges();
                 }
             }

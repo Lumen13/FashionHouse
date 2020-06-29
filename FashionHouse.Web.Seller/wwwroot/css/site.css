@@ -34,6 +34,18 @@ a {
     margin-bottom: 0px !important;
 }
 
+.myDivCenter {
+    text-align:center;
+}
+
+.myFilteredImg {
+    margin: auto;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 3px;
+    width: 90%;
+}
+
 .myMarginInFilter {
     padding: 0px;
     margin-left: 20px;

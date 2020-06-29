@@ -4,14 +4,16 @@ using FashionHouse.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FashionHouse.Data.EF.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20200629122144_piecesIntoEntity")]
+    partial class piecesIntoEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace FashionHouse.Data.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.AttributesValuesProductEntity", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.AttributesValuesProductEntities", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +48,7 @@ namespace FashionHouse.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("AttributesValuesProductEntities");
+                    b.ToTable("ProductAttributeValuesProducts");
                 });
 
             modelBuilder.Entity("FashionHouse.Data.DbModel.Product", b =>
@@ -229,7 +231,7 @@ namespace FashionHouse.Data.EF.Migrations
                     b.ToTable("Sellers");
                 });
 
-            modelBuilder.Entity("FashionHouse.Data.DbModel.AttributesValuesProductEntity", b =>
+            modelBuilder.Entity("FashionHouse.Data.DbModel.AttributesValuesProductEntities", b =>
                 {
                     b.HasOne("FashionHouse.Data.DbModel.ProductAttribute", null)
                         .WithMany()

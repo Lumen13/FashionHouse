@@ -8,7 +8,9 @@ namespace FashionHouse.Data.ViewModel
 {
     public class ProductsView
     {
-        public List<ProductModel> ProductModels { get; set; }
+        public List<ProductModel> ProductModels { get; set; }        
+        public List<AttributesValuesProductEntity> AttributesValuesEntities { get; set; }
+        public List<ProductAttributeValue> ProductAttributeValues { get; set; }
         public List<ProductImage> Images { get; set; }
     }
 }

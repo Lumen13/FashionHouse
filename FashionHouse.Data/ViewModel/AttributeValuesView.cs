@@ -1,8 +1,5 @@
 ﻿using FashionHouse.Data.DbModel;
-using FashionHouse.Data.ObjectModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FashionHouse.Data.ViewModel
 {

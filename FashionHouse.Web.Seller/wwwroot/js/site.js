@@ -12,3 +12,20 @@
         }
     }
 }
+
+function createFilteredItem() {
+    let imgCounter = 0
+    function createImg() {
+        const img = document.createElement('img')
+        img.id = `myImg${imgCounter}`
+        img.style.height = '400px'
+        img.style.width = '400px'
+
+        const wraper = document.createElement('div')
+        wraper.appendChild(img)
+
+        imgCounter++
+    }
+    
+    return createImg
+}

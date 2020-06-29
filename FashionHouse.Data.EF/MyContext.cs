@@ -30,7 +30,7 @@ namespace FashionHouse.Data.EF
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
         public DbSet<ProductAttributesEntity> ProductAttributesEntities { get; set; }
         public DbSet<Seller> Sellers { get; set; }
-        public DbSet<ProductAttributeValuesProducts> ProductAttributeValuesProducts { get; set; }
+        public DbSet<AttributesValuesProductEntity> AttributesValuesProductEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,7 +58,7 @@ namespace FashionHouse.Data.EF
                 builder.Property(x => x.Description).HasMaxLength(1000);
             });
 
-            modelBuilder.Entity<ProductAttributeValuesProducts>(builder =>
+            modelBuilder.Entity<AttributesValuesProductEntity>(builder =>
             {
                 builder.HasKey(x => x.Id);
                 builder.HasOne<Product>()
