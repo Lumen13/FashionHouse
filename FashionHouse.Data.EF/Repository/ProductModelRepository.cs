@@ -107,7 +107,7 @@ namespace FashionHouse.Data.EF.Repository
                 for (int i = 0; i < _productModel.Images.Count; i++)
                 {
                     var fullPath = $"{_webRootPath}\\wwwroot\\Images\\sellerId_{sellerId}\\productId_{product.Id}\\";
-                    var imageName = i + "." + _productModel.Images[i].ContentType.Split("/").Last();
+                    var imageName = i + 1 + "." + _productModel.Images[i].ContentType.Split("/").Last();
 
                     var ImageURL = fullPath + imageName;
                     ProductImage dbImage = new ProductImage()

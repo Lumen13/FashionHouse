@@ -1,3 +1,159 @@
 ﻿@model List<FashionHouse.Data.ObjectModel.ProductModel>
 
-<h1>GET READY !</h1>
+<div id="carousel" class="carousel slide" data-ride="carousel">
+    @*carousel with interval, indications and 4 imgs*@
+    <ol class="carousel-indicators">
+        <li data-target="#carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel" data-slide-to="1"></li>
+        <li data-target="#carousel" data-slide-to="2"></li>
+        <li data-target="#carousel" data-slide-to="3"></li>
+    </ol>
+
+    <div class="carousel-inner">
+        <div onclick="window.location='https://localhost:44361/Products'"
+             class="carousel-item active"
+             id="carousel_0"
+             data-interval="7000">
+            <img src="~/Images/carousel/0.jpg"
+                 class="d-block w-100"
+                 alt="carouselImg_0"
+                 onclick="">
+        </div>
+        <div onclick="window.location='https://localhost:44361/Products'"
+             class="carousel-item"
+             id="carousel_1"
+             data-interval="6000">
+            <img src="~/Images/carousel/1.jpg"
+                 class="d-block w-100"
+                 alt="carouselImg_1">
+        </div>
+        <div onclick="window.location='https://localhost:44361/Products'"
+             class="carousel-item"
+             id="carousel_2"
+             data-interval="6000">
+            <img src="~/Images/carousel/2.jpg"
+                 class="d-block w-100"
+                 alt="carouselImg_2">
+        </div>
+        <div onclick="window.location='https://localhost:44361/Products'"
+             class="carousel-item"
+             id="carousel_3"
+             data-interval="6000">
+            <img src="~/Images/carousel/3.jpg"
+                 class="d-block w-100"
+                 alt="carouselImg_3">
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-8">
+        <img src="~/Images/main/banner0.jpg" class="my-leftImg" alt="banner0" />
+    </div>
+    <div class="col-4 my-textCenter">
+        <br><br><br><br>
+        <h4>Только сегодня и только в FASHION HOUSE!</h4>
+        <h5>Скидки на любую обувь до 20%</h5>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-4 my-textCenter">
+        <br><br><br><br>
+        <h4>Только сегодня и только в FASHION HOUSE!</h4>
+        <h5>Скидки на весь модельный ряд платьев 20%</h5>
+    </div>
+    <div class="col-8">
+        <img src="~/Images/main/banner1.jpg" class="my-leftImg" alt="banner0" />
+    </div>
+</div>
+
+<div id="notationWithHider">
+    @*big notation with hider*@
+    <br>
+    <br>
+    <h3 class="my-unhideNotation my-textCenter">Интернет-магазин модной женской одежды FASHION HOUSE</h3>
+    <p class="my-unhideNotation">
+        Официальный интернет-магазин одного из ведущих российских
+        брендов для молодых, ярких, активных и успешных девушек,
+        которые хотят найти свой индивидуальный стиль, создать свой идеальный образ.
+        В нашем магазине женской одежды представлены самые актуальные модели одежды
+        и аксессуаров от собственных дизайнеров бренда, которые точно знают,
+        как подчеркнуть женственность и чувственность, стиль и чувство вкуса
+        каждой девушки.
+    </p>
+
+    <p class="my-hideNotation">
+        Основной ассортимент интернет-магазина FASHION HOUSE – платья.
+        И каждую неделю мы обновляем и дополняем наш каталог новыми моделями
+        в соответствии с последними трендами мира моды. Кроме того,
+        в нашем интернет-магазине можно подобрать look на любой вкус и для
+        любого события: помимо платьев в FASHION HOUSE представлены джемперы
+        и блузки, юбки, брюки, джинсы и шорты, жакеты и жилеты, верхняя одежда,
+        комбинезоны и, конечно, одежда для дома и сна, аксессуары.
+    </p>
+
+    <p class="my-hideNotation">
+        <br>
+        В магазине женской одежды, где много платьев, каждая девушка сможет
+        найти не только самые стильные и красивые варианты этого самого любимого
+        предмета гардероба, но еще и блузки, юбки разных силуэтов и длины,
+        жакеты и жилеты, брюки, леггинсы и джинсы, верхнюю одежду на любой сезон,
+        а, так же, аксессуары.
+    </p>
+    <p class="my-hideNotation">
+        Каждая группа товаров широко представлена всегда
+        качественными ультармодными моделями.
+    </p>
+    <p class="my-hideNotation">
+        <h3 class="my-hideNotation my-textCenter">Стильный шоппинг без рисков в интернет-магазине женской одежды</h3>
+    </p>
+    <p class="my-hideNotation">
+        Онлайн-шоппинг прочно вошел в жизнь каждой современной модницы.
+        Мы сделали интерфейс нашего интернет-магазина сайта простым,
+        удобным и интуитивным, чтобы совершать покупки с нами было легко и удобно,
+        чтобы каждая девушка смогла просто и быстро оформить заказ,
+        даже если никогда раньше она не покупала в интернет-магазине FASHION HOUSE.
+        Яркая, красивая виртуальная витрина позволит рассмотреть
+        каждый товар во всех ракурсах.
+    </p>
+    <p class="my-hideNotation">
+        Наш магазин женской одежды предоставляет своим покупателям максимально
+        полную информацию, чтобы онлайн-шоппинг в FASHION HOUSE
+        приносил только удовольствие:
+    </p>
+
+    <p class="my-hideNotation">
+        <ul class="my-hideNotation">
+            <li class="my-hideNotation">
+                на странице каждого товара есть подробная таблица размеров;
+            </li>
+            <li class="my-hideNotation">
+                гарантия качества всех представленных моделей и аксессуаров;
+            </li>
+            <li class="my-hideNotation">
+                легкий обмен и возврат товара в случае, если он все же
+                не устроил покупателя качеством или просто не подошел;
+            </li>
+            <li class="my-hideNotation">
+                красивые качественные фото в каталоге позволят в полной мере
+                рассмотреть каждую понравившуюся модель,
+                ее детали и фактуру ткани.
+            </li>
+        </ul>
+    </p>
+    <p class="my-hideNotation">
+        Высокий уровень сервиса, высококвалифицированные специалисты
+        call-центра, новая программа лояльности и карта особых
+        привилегий FASHION HOUSE для всех покупателей, а также разнообразные
+        акции и специальные предложения превращают первое знакомство с
+        интернет-магазином женской одежды FASHION HOUSE очень приятным!
+    </p>
+
+    <center><button type="button" class="smoothToggle btn btn-light" style="">Подробнее..</button></center>         @*hide button*@
+</div>
+
+<div id="paymentDelivery">
+    @*payment-delivery img*@
+    <br><img class="my-centerImg" src="~/Images/main/paymentDelivery.jpg" />
+</div>

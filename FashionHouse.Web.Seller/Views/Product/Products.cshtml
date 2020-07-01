@@ -3,35 +3,38 @@
 <br />
 
 <div>
+    @*div area for filter's background-img*@
     <img src="~/Images/main/filterBorder.png" alt="filterBolder" asp-append-version="true" class="align-self-start position-absolute" />
 </div>
 
 <div class="container">
     <div class="row">
         <div class="col-2 custom-control custom-radio my-blank" id="categoryFilter">
+            @*div area for filter*@
             <label class="font-weight-bold">Категория:</label>
+            <br />
             @foreach (var model in Model.ProductModels)
             {
                 @foreach (var category in model.ProductCategories)
                 {
                     if (category.IsParent == false)
                     {
-                        <div>
-                            <label class="my-paddingZero">
-                                <input class="align-self-start font-weight-normal"
-                                       name="@category.Id"
-                                       value="@category.Id"
-                                       type="radio" />
-                                @category.Name
-                            </label>
-                        </div>
+                        <input id="filter_@category.Id" class="align-self-start font-weight-normal"
+                               name="@category"
+                               value="@category.Id"
+                               type="radio"
+                               onclick="filterItems(@category.Id)" />
+                        @category.Name <br />
                     }
                 }
                 break;
             }
+            <br />
+            <button type="button" class="btn btn-light" onclick="resetFilter()">Сбросить фильтр</button>
         </div>
         <div class="col-1" id="verticalSeparator-1"></div>
         <div class="col-md-8 row" id="filteredItemsArea">
+            @*div areas for all items*@
             @for (int i = 0; i < Model.ProductModels.Count; i++)
             {
                 if (i % 2 == 0)
@@ -39,101 +42,110 @@
                     <div class="w-100" id="itemsSeparator_@i"></div>
                 }
 
-                <div class="col my-paddingZero myDivCenter" id="item_@i">
+                <div class="col my-paddingZero myDivCenter category_@Model.ProductModels[i].ProductCategoryId" id="item_@Model.ProductModels[i].Id">
                     <img src="~/Images/sellerId_@Model.ProductModels[i].SellerId/productId_@Model.ProductModels[i].Id/1.jpeg"
                          class="myFilteredImg"
                          alt="img_@i" />
 
                     <p class="font-weight-bold">@Model.ProductModels[i].Name</p>
-                    
+
                     Цвет: <label>
-                        @switch (@Model.ProductAttributeValues.Where(
-                 x => x.Id == Model.AttributesValuesEntities.Where(
-                 x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                 .ProductAttributeValueId).FirstOrDefault().AttributeValue)
-                        {
-                            case "Белый":
-                                <button type="button" class="btn btn-light text-dark">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Серый":
-                                <button type="button" class="btn btn-secondary text-white">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Черный":
-                                <button type="button" class="btn btn-dark text-white">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Красный":
-                                <button type="button" class="btn btn-danger text-white">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Желтый":
-                                <button type="button" class="btn btn-warning text-dark">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Синий":
-                                <button type="button" class="btn btn-primary text-white">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            case "Зеленый":
-                                <button type="button" class="btn btn-success text-white">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                            default:
-                                <button type="button" class="btn btn-outline-info">
-                                    @Model.ProductAttributeValues.Where(
-                        x => x.Id == Model.AttributesValuesEntities.Where(
-                        x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
-                        .ProductAttributeValueId).FirstOrDefault().AttributeValue
-                                </button>
-                                break;
-                        }
+                        @*icons for colors*@
+                        @if (Model.AttributesValuesEntities.Where(x => x.ProductId == Model.ProductModels[i].Id &&
+                   x.ProductAttributeId == 3).FirstOrDefault() != null)             @*null reference check*@
+                {
+                    @switch (@Model.ProductAttributeValues.Where(
+               x => x.Id == Model.AttributesValuesEntities.Where(
+               x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+               .ProductAttributeValueId).FirstOrDefault().AttributeValue)
+                    {
+                        case "Белый":
+                            <button type="button" class="btn btn-light text-dark">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Серый":
+                            <button type="button" class="btn btn-secondary text-white">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Черный":
+                            <button type="button" class="btn btn-dark text-white">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Красный":
+                            <button type="button" class="btn btn-danger text-white">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Желтый":
+                            <button type="button" class="btn btn-warning text-dark">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Синий":
+                            <button type="button" class="btn btn-primary text-white">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        case "Зеленый":
+                            <button type="button" class="btn btn-success text-white">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                        default:
+                            <button type="button" class="btn btn-outline-info">
+                                @Model.ProductAttributeValues.Where(
+                    x => x.Id == Model.AttributesValuesEntities.Where(
+                    x => x.ProductId == Model.ProductModels[i].Id && x.ProductAttributeId == 3).FirstOrDefault()
+                    .ProductAttributeValueId).FirstOrDefault().AttributeValue
+                            </button>
+                            break;
+                    }
+                }
                     </label>
 
                     <br />
-                    Размеры: @foreach (var sizeEntity in @Model.AttributesValuesEntities.Where(x => x.ProductId == Model.ProductModels[i].Id &&
+                    Размеры: <label>
+                        @*icons for sizes*@
+                        @foreach (var sizeEntity in @Model.AttributesValuesEntities.Where(x => x.ProductId == Model.ProductModels[i].Id &&
 (x.ProductAttributeId == 1 || x.ProductAttributeId == 2)).ToList())
-                    {
-                        <label>
+                        {
+
                             <button class="btn btn-light">
                                 @Model.ProductAttributeValues.Where(x => x.Id == sizeEntity.ProductAttributeValueId).FirstOrDefault().AttributeValue
                             </button>
-                        </label>
-                    }
+
+                        }
+                    </label>
                 </div>
             }
         </div>
     </div>
     <div class="row">
+        @*separator for some empty footer space*@
         <br /><br /><br /><br /><br /><br /><br /><br /><br />
         <div class="col-md-3 offset-md-3"></div>
     </div>
