@@ -45,7 +45,8 @@
                 <div class="col my-paddingZero myDivCenter category_@Model.ProductModels[i].ProductCategoryId" id="item_@Model.ProductModels[i].Id">
                     <img src="~/Images/sellerId_@Model.ProductModels[i].SellerId/productId_@Model.ProductModels[i].Id/1.jpeg"
                          class="myFilteredImg"
-                         alt="img_@i" />
+                         alt="img_@i"
+                         onclick="window.location='https://localhost:44361/Product/@Model.ProductModels[i].Id'" />
 
                     <p class="font-weight-bold">@Model.ProductModels[i].Name</p>
 

@@ -9,6 +9,8 @@ namespace FashionHouse.Data.IRepository
     {
         Product GetProduct(int sellerId, int productId);
 
+        ProductView GetProductModel(int sellerId, int productId);
+
         ProductsView GetProductModels(int sellerId);
 
         Product PushProductModel(ProductModel productModel, int sellerId);

@@ -80,6 +80,14 @@ namespace FashionHouse.Web.Seller.Controllers
             return View(productsView);
         }
 
+        [Route("Product/{id}")]
+        public IActionResult Product(int id)
+        {
+            ProductView productView = _productModelRepository.GetProductModel(_sellerId, id);
+
+            return View(productView);
+        }
+
         [HttpGet, Route("AddAttributeValues/{id}")]
         public IActionResult AddAttributeValues(int id)
         {

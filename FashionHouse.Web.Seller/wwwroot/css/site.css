@@ -16,6 +16,27 @@ span:after {
     display: table;
 }
 
+.my-scores {
+    text-align: justify
+}
+
+.my-iconHearts {
+    width: 15%;
+    height: 15%;
+}
+
+.my-iconSmallName {
+    width: 5%;
+    height: 5%;
+    margin-top: 2%;
+}
+
+.my-iconBig {
+    width: 25%;
+    height: 25%;
+    float: right;
+}
+
 .my-hideDiv {
     display: none;
 }
@@ -80,6 +101,15 @@ span:after {
     border-radius: 15px;
     padding: 3px;
     width: 90%;
+}
+
+.myImg {
+    margin: auto;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: unset;
+    margin: auto;
+    width: 100%;
 }
 
 .myMarginInFilter {
