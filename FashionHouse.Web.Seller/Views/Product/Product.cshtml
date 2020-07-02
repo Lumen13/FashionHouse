@@ -17,7 +17,7 @@
 </div>
 <br />
 
-<div id="colorSize" class="col">
+<div id="colorSizeDesc" class="col">
     <div class="row">
         <div class="col my-textCenter">
             <h6>
@@ -36,9 +36,9 @@
 x.ProductAttributeId == 3).FirstOrDefault() != null)
                 {
                     @switch (@Model.ProductAttributeValues.Where(
-      x => x.Id == Model.AttributesValuesEntities.Where(
-      x => x.ProductId == Model.ProductModel.Id && x.ProductAttributeId == 3).FirstOrDefault()
-      .ProductAttributeValueId).FirstOrDefault().AttributeValue)
+     x => x.Id == Model.AttributesValuesEntities.Where(
+     x => x.ProductId == Model.ProductModel.Id && x.ProductAttributeId == 3).FirstOrDefault()
+     .ProductAttributeValueId).FirstOrDefault().AttributeValue)
                     {
                         case "Белый":
                             <button type="button" class="btn btn-light text-dark">
@@ -112,14 +112,29 @@ x.ProductAttributeId == 3).FirstOrDefault() != null)
             <h6>
                 Размеры -
                 @foreach (var sizeEntity in @Model.AttributesValuesEntities.Where(x => x.ProductId == Model.ProductModel.Id &&
-                                                                          (x.ProductAttributeId == 1 ||
-                                                                           x.ProductAttributeId == 2)).ToList())
+                                                                         (x.ProductAttributeId == 1 ||
+                                                                          x.ProductAttributeId == 2)).ToList())
                 {
                     <button class="btn btn-light">
                         @Model.ProductAttributeValues.Where(x => x.Id == sizeEntity.ProductAttributeValueId).FirstOrDefault().AttributeValue
                     </button>
                 }
             </h6>
+        </div>
+        <div class="col my-textCenter">
+            Остаток -
+            <b>
+                @Model.ProductModel.Count шт.
+            </b>
+        </div>
+    </div>
+    <div class="row">        
+        <div class="col my-textCenter">
+            <br>
+            Информация о товаре:
+            <b>
+                @Model.ProductModel.MarketingInfo
+            </b>            
         </div>
     </div>
 </div>
